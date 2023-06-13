@@ -21,12 +21,15 @@ void capture() {
         switch (key) {
             case '1':
                 AddData(data_raw, 1, shape);
+                save("tmp.cereal", data_raw);
                 break;
             case '2':
                 AddData(data_raw, 2, shape);
+                save("tmp.cereal", data_raw);
                 break;
             case '3':
                 AddData(data_raw, 3, shape);
+                save("tmp.cereal", data_raw);
                 break;
             case 'p':
                 PrintData(data_raw);
@@ -60,7 +63,7 @@ int main()
         shape_predictor pose_model;
         deserialize("shape_predictor_68_face_landmarks.dat") >> pose_model;
 
-        while(!win.is_closed() || exit_flag)
+        while(!win.is_closed() && !exit_flag)
         {
             cv::Mat temp;
             if (!cap.read(temp)) {
@@ -81,6 +84,8 @@ int main()
         cout << "You need dlib's default face landmarking model file to run this example." << endl;
         cout << "You can get it from the following URL: " << endl;
         cout << "   http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2" << endl;
+        cout << "The bz2 file can be extracted the following command: " << endl;
+        cout << "   bzip2 -dk shape_predictor_68_face_landmarks.dat.bz2" << endl;
         cout << endl << e.what() << endl;
     }
     catch(exception& e)

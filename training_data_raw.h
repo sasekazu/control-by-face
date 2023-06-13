@@ -81,3 +81,23 @@ std::vector<int> GetY(const TrainingDataRaw& data_raw, unsigned int index){
     }
     return y;
 }
+
+std::vector<dlib::matrix<double,136,1>> GetPartsMatrix(const TrainingDataRaw& data_raw){
+    std::vector<dlib::matrix<double,136,1>> parts;
+    for(unsigned int i=0; i<data_raw.data.size(); ++i) {
+        dlib::matrix<double,136,1> part;
+        for(unsigned int j=0; j<data_raw.data[i].size(); ++j) {
+            part(j) = data_raw.data[i].at(j);
+        }
+        parts.push_back(part);
+    }
+    return parts;
+}
+
+std::vector<double> ConvertToDouble(const std::vector<int>& data){
+    std::vector<double> data_double;
+    for(unsigned int i=0; i<data.size(); ++i) {
+        data_double.push_back(data[i]);
+    }
+    return data_double;
+}
