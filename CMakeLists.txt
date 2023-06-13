@@ -14,3 +14,7 @@ target_link_libraries(collector dlib::dlib ${OpenCV_LIBS} cereal::cereal)
 add_executable(trainer trainer.cpp)
 target_link_libraries(trainer dlib::dlib ${OpenCV_LIBS} Python3::NumPy Python3::Python cereal::cereal)
 target_include_directories(trainer PUBLIC "${PROJECT_SOURCE_DIR}/matplotlib-cpp")
+
+add_executable(otameshi otameshi.cpp)
+target_link_libraries(otameshi dlib::dlib ${OpenCV_LIBS} cereal::cereal)
+target_include_directories(otameshi PUBLIC "${PROJECT_SOURCE_DIR}/matplotlib-cpp")
