@@ -11,6 +11,7 @@ using namespace dlib;
 using namespace std;
 full_object_detection shape;
 bool exit_flag = false;
+TrainingDataRaw data_raw;
 
 void capture() {
     while(!exit_flag){

@@ -14,7 +14,6 @@ struct TrainingDataRaw
         archive(labels, data);
     }
 };
-TrainingDataRaw data_raw;
 
 void AddData(TrainingDataRaw& data_raw, int label, const dlib::full_object_detection& shape){
     std::vector<int> parts;
