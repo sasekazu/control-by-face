@@ -5,7 +5,7 @@
 #include <dlib/image_processing.h>
 #include <dlib/gui_widgets.h>
 #include <thread>
-#include "training_data_row.h"
+#include "training_data_raw.h"
 
 using namespace dlib;
 using namespace std;
