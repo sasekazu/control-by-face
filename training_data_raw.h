@@ -3,6 +3,7 @@
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/vector.hpp>
 #include <dlib/image_processing/frontal_face_detector.h>
+#include <dlib/matrix.h>
 
 struct TrainingDataRaw
 {
@@ -44,7 +45,39 @@ void save(const char* filename, const TrainingDataRaw& data_raw){
 }
 
 void load(const char* filename, TrainingDataRaw& data_raw){
-    std::ifstream ifs(filename, std::ios::binary);
-    cereal::BinaryInputArchive iarchive(ifs); 
-    iarchive(data_raw); 
+    try{
+        std::ifstream ifs(filename, std::ios::binary);
+        cereal::BinaryInputArchive iarchive(ifs); 
+        iarchive(data_raw); 
+    }
+    catch(std::exception& e){
+        std::cout << "Error at load(): " << e.what() << std::endl;
+    }
+}
+
+std::vector<dlib::point> GetParts(const TrainingDataRaw& data_raw, unsigned int index){
+    std::vector<dlib::point> parts;
+    for(unsigned int i=0; i<data_raw.data[index].size(); i+=2) {
+        dlib::point part;
+        part(0) = data_raw.data[index][i];
+        part(1) = data_raw.data[index][i+1];
+        parts.push_back(part);
+    }
+    return parts;
+}
+
+std::vector<int> GetX(const TrainingDataRaw& data_raw, unsigned int index){
+    std::vector<int> x;
+    for(unsigned int i=0; i<data_raw.data[index].size(); i+=2) {
+        x.push_back(data_raw.data[index][i]);
+    }
+    return x;
+}
+
+std::vector<int> GetY(const TrainingDataRaw& data_raw, unsigned int index){
+    std::vector<int> y;
+    for(unsigned int i=0; i<data_raw.data[index].size(); i+=2) {
+        y.push_back(data_raw.data[index][i+1]);
+    }
+    return y;
 }
