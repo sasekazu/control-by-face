@@ -48,14 +48,14 @@ void PrintData(const TrainingDataRaw& data_raw){
     }
 }
 
-void save(){
-    std::ofstream ofs("out.cereal", std::ios::binary);
+void save(const char* filename, const TrainingDataRaw& data_raw){
+    std::ofstream ofs(filename, std::ios::binary);
     cereal::BinaryOutputArchive oarchive(ofs); 
     oarchive(data_raw); 
 }
 
-void load(){
-    std::ifstream ifs("out.cereal", std::ios::binary);
+void load(const char* filename, TrainingDataRaw& data_raw){
+    std::ifstream ifs(filename, std::ios::binary);
     cereal::BinaryInputArchive iarchive(ifs); 
     iarchive(data_raw); 
 }
@@ -79,7 +79,7 @@ void capture() {
                 PrintData(data_raw);
                 break;
             case 's':
-                save();
+                save("out.cereal", data_raw);
                 break;
             case 27: // Escape
                 exit_flag = true;
@@ -91,7 +91,7 @@ void capture() {
 
 int main()
 {
-    // load();
+    // load("out.cereal", data_raw);
 
     std::thread t1(capture);
     try
