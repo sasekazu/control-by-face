@@ -23,9 +23,3 @@ target_link_libraries(trainer dlib::dlib ${OpenCV_LIBS} Python3::NumPy Python3::
 target_include_directories(trainer PUBLIC 
     ${MATPLOTLIBCPP_INCLUDE_DIR}
     ${CEREAL_INCLUDE_DIR})
-
-add_executable(otameshi otameshi.cpp)
-target_link_libraries(otameshi dlib::dlib ${OpenCV_LIBS})
-target_include_directories(otameshi PUBLIC
-    ${MATPLOTLIBCPP_INCLUDE_DIR}
-    ${CEREAL_INCLUDE_DIR})
