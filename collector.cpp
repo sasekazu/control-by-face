@@ -9,6 +9,7 @@
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/button.hpp>
 #include "training_data_raw.h"
+#include <locale>
 
 using namespace dlib;
 using namespace std;
@@ -27,66 +28,78 @@ const int TOMARU = 8;
 
 void capture() {
 
+    std::locale::global(std::locale(""));
+
     nana::form fm;
     nana::button btn_migi{fm};
-    btn_migi.caption("migi");
+    btn_migi.caption("みぎ");
     btn_migi.events().click([]{
         AddData(data_raw, MIGI, shape);
+        cout << data_raw.data.size() << " Right" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_hidari{fm};
-    btn_hidari.caption("hidari");
+    btn_hidari.caption("ひだり");
     btn_hidari.events().click([]{
         AddData(data_raw, HIDARI, shape);
+        cout << data_raw.data.size() << " Left" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_mae{fm};
-    btn_mae.caption("mae");
+    btn_mae.caption("まえ");
     btn_mae.events().click([]{
         AddData(data_raw, MAE, shape);
+        cout << data_raw.data.size() << " Forward" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_ushiro{fm};
-    btn_ushiro.caption("ushiro");
+    btn_ushiro.caption("うしろ");
     btn_ushiro.events().click([]{
         AddData(data_raw, USHIRO, shape);
+        cout << data_raw.data.size() << " Backward" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_ue{fm};
-    btn_ue.caption("ue");
+    btn_ue.caption("うえ");
     btn_ue.events().click([]{
         AddData(data_raw, UE, shape);
+        cout << data_raw.data.size() << " Up" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_shita{fm};
-    btn_shita.caption("shita");
+    btn_shita.caption("した");
     btn_shita.events().click([]{
         AddData(data_raw, SHITA, shape);
+        cout << data_raw.data.size() << " Down" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_tsukamu{fm};
-    btn_tsukamu.caption("tsukamu");
+    btn_tsukamu.caption("つかむ");
     btn_tsukamu.events().click([]{
         AddData(data_raw, TSUKAMU, shape);
+        cout << data_raw.data.size() << " Grab" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_tomaru{fm};
-    btn_tomaru.caption("tomaru");
+    btn_tomaru.caption("とまる");
     btn_tomaru.events().click([]{
         AddData(data_raw, TOMARU, shape);
+        cout << data_raw.data.size() << " Stop" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_print{fm};
-    btn_print.caption("print");
+    btn_print.caption("表示");
     btn_print.events().click([]{
         PrintData(data_raw);
     });
     nana::button btn_save{fm};
-    btn_save.caption("save");
+    btn_save.caption("ほぞん");
     btn_save.events().click([]{
         save("out.cereal", data_raw);
+        nana::msgbox msg{"保存しました"};
+        msg<<"保存しました。\nファイル名：out.cereal\nデータ数："<<data_raw.data.size()<<"\n";
+        msg.show();
     });
-
 
     nana::place layout(fm);
     layout.div("vert<migi><hidari><mae><ushiro><ue><shita><tsukamu><tomaru><print><save>");
@@ -111,8 +124,6 @@ void capture() {
 
 int main()
 {
-    // load("out.cereal", data_raw);
-
     std::thread t1(capture);
     try
     {

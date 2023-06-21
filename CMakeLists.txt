@@ -8,7 +8,12 @@ find_package(unofficial-nana CONFIG REQUIRED)
 
 set(CEREAL_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/cereal/include")
 
-message(STATUS "CEREAL_INCLUDE_DIR: ${CEREAL_INCLUDE_DIR}")
+# 日本語文字列を正しく表示するための設定
+if (WIN32)
+    add_definitions(-D_UNICODE -DUNICODE)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
+endif()
 
 add_executable(collector collector.cpp)
 target_link_libraries(collector dlib::dlib ${OpenCV_LIBS}  unofficial::nana::nana)
