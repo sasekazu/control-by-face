@@ -1,10 +1,8 @@
 #include "training_data_raw.h"
-#include "matplotlibcpp.h"
 #include <dlib/svm_threaded.h>
 
 using namespace std;
 using namespace dlib;
-namespace plt = matplotlibcpp;
 
 typedef matrix<double,136,1> sample_type;
 
@@ -31,4 +29,6 @@ int main() {
     catch(std::exception& e){
         std::cout << "Error at main(): " << e.what() << std::endl;
     }
+    cout << "Press enter to exit" << endl;
+    getchar();
 }

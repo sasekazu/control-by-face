@@ -5,7 +5,11 @@
 #include <dlib/image_processing.h>
 #include <dlib/gui_widgets.h>
 #include <thread>
+#include <nana/gui.hpp>
+#include <nana/gui/widgets/label.hpp>
+#include <nana/gui/widgets/button.hpp>
 #include "training_data_raw.h"
+#include <locale>
 
 using namespace dlib;
 using namespace std;
@@ -13,42 +17,113 @@ full_object_detection shape;
 bool exit_flag = false;
 TrainingDataRaw data_raw;
 
+const int MIGI = 1;
+const int HIDARI = 2;
+const int MAE = 3;
+const int USHIRO = 4;
+const int UE = 5;
+const int SHITA = 6;
+const int TSUKAMU = 7;
+const int TOMARU = 8;
+
 void capture() {
-    while(!exit_flag){
-        char key;
-        std::cout << "Press label or ESC to exit: ";
-        std::cin >> key;
-        switch (key) {
-            case '1':
-                AddData(data_raw, 1, shape);
-                save("tmp.cereal", data_raw);
-                break;
-            case '2':
-                AddData(data_raw, 2, shape);
-                save("tmp.cereal", data_raw);
-                break;
-            case '3':
-                AddData(data_raw, 3, shape);
-                save("tmp.cereal", data_raw);
-                break;
-            case 'p':
-                PrintData(data_raw);
-                break;
-            case 's':
-                save("out.cereal", data_raw);
-                break;
-            case 27: // Escape
-                exit_flag = true;
-                break;
-        }
-    }
+
+    std::locale::global(std::locale(""));
+
+    nana::form fm;
+    nana::button btn_migi{fm};
+    btn_migi.caption("1 みぎ");
+    btn_migi.events().click([]{
+        AddData(data_raw, MIGI, shape);
+        cout << data_raw.data.size() << " Right" << endl;
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_hidari{fm};
+    btn_hidari.caption("2 ひだり");
+    btn_hidari.events().click([]{
+        AddData(data_raw, HIDARI, shape);
+        cout << data_raw.data.size() << " Left" << endl;
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_mae{fm};
+    btn_mae.caption("3 まえ");
+    btn_mae.events().click([]{
+        AddData(data_raw, MAE, shape);
+        cout << data_raw.data.size() << " Forward" << endl;
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_ushiro{fm};
+    btn_ushiro.caption("4 うしろ");
+    btn_ushiro.events().click([]{
+        AddData(data_raw, USHIRO, shape);
+        cout << data_raw.data.size() << " Backward" << endl;
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_ue{fm};
+    btn_ue.caption("5 うえ");
+    btn_ue.events().click([]{
+        AddData(data_raw, UE, shape);
+        cout << data_raw.data.size() << " Up" << endl;
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_shita{fm};
+    btn_shita.caption("6 した");
+    btn_shita.events().click([]{
+        AddData(data_raw, SHITA, shape);
+        cout << data_raw.data.size() << " Down" << endl;
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_tsukamu{fm};
+    btn_tsukamu.caption("7 つかむ");
+    btn_tsukamu.events().click([]{
+        AddData(data_raw, TSUKAMU, shape);
+        cout << data_raw.data.size() << " Grab" << endl;
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_tomaru{fm};
+    btn_tomaru.caption("8 とまる");
+    btn_tomaru.events().click([]{
+        AddData(data_raw, TOMARU, shape);
+        cout << data_raw.data.size() << " Stop" << endl;
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_print{fm};
+    btn_print.caption("表示");
+    btn_print.events().click([]{
+        PrintData(data_raw);
+    });
+    nana::button btn_save{fm};
+    btn_save.caption("ほぞん");
+    btn_save.events().click([]{
+        save("out.cereal", data_raw);
+        nana::msgbox msg{"保存しました"};
+        msg<<"保存しました。\nファイル名：out.cereal\nデータ数："<<data_raw.data.size()<<"\n";
+        msg.show();
+    });
+
+    nana::place layout(fm);
+    layout.div("vert<migi><hidari><mae><ushiro><ue><shita><tsukamu><tomaru><print><save>");
+
+    layout["migi"] << btn_migi;
+    layout["hidari"] << btn_hidari;
+    layout["mae"] << btn_mae;
+    layout["ushiro"] << btn_ushiro;
+    layout["ue"] << btn_ue;
+    layout["shita"] << btn_shita;
+    layout["tsukamu"] << btn_tsukamu;
+    layout["tomaru"] << btn_tomaru;
+    layout["print"] << btn_print;
+    layout["save"] << btn_save;
+    
+    layout.collocate();
+    fm.show();
+    nana::exec();
+    exit_flag = true;
 }
 
 
 int main()
 {
-    // load("out.cereal", data_raw);
-
     std::thread t1(capture);
     try
     {
@@ -74,7 +149,7 @@ int main()
             win.clear_overlay();
             win.set_size(640, 480);
             win.set_background_color(0, 0, 0);
-            // win.set_image(cimg);
+            win.set_image(cimg);
             if(faces.size() > 0) {
                 shape = pose_model(cimg, faces[0]);
                 win.add_overlay(render_face_detections(shape));
@@ -94,4 +169,5 @@ int main()
     {
         cout << e.what() << endl;
     }
+    t1.join();
 }
