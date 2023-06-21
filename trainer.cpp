@@ -29,4 +29,6 @@ int main() {
     catch(std::exception& e){
         std::cout << "Error at main(): " << e.what() << std::endl;
     }
+    cout << "Press enter to exit" << endl;
+    getchar();
 }

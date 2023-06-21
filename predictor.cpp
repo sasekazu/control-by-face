@@ -39,6 +39,8 @@ int main() {
             cv_image<bgr_pixel> cimg(temp);
             std::vector<rectangle> faces = detector(cimg);
             win.clear_overlay();
+            win.set_size(640, 480);
+            win.set_background_color(0, 0, 0);
             win.set_image(cimg);
             if(faces.size() > 0) {
                 shape = pose_model(cimg, faces[0]);

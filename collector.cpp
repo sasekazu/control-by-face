@@ -32,56 +32,56 @@ void capture() {
 
     nana::form fm;
     nana::button btn_migi{fm};
-    btn_migi.caption("みぎ");
+    btn_migi.caption("1 みぎ");
     btn_migi.events().click([]{
         AddData(data_raw, MIGI, shape);
         cout << data_raw.data.size() << " Right" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_hidari{fm};
-    btn_hidari.caption("ひだり");
+    btn_hidari.caption("2 ひだり");
     btn_hidari.events().click([]{
         AddData(data_raw, HIDARI, shape);
         cout << data_raw.data.size() << " Left" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_mae{fm};
-    btn_mae.caption("まえ");
+    btn_mae.caption("3 まえ");
     btn_mae.events().click([]{
         AddData(data_raw, MAE, shape);
         cout << data_raw.data.size() << " Forward" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_ushiro{fm};
-    btn_ushiro.caption("うしろ");
+    btn_ushiro.caption("4 うしろ");
     btn_ushiro.events().click([]{
         AddData(data_raw, USHIRO, shape);
         cout << data_raw.data.size() << " Backward" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_ue{fm};
-    btn_ue.caption("うえ");
+    btn_ue.caption("5 うえ");
     btn_ue.events().click([]{
         AddData(data_raw, UE, shape);
         cout << data_raw.data.size() << " Up" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_shita{fm};
-    btn_shita.caption("した");
+    btn_shita.caption("6 した");
     btn_shita.events().click([]{
         AddData(data_raw, SHITA, shape);
         cout << data_raw.data.size() << " Down" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_tsukamu{fm};
-    btn_tsukamu.caption("つかむ");
+    btn_tsukamu.caption("7 つかむ");
     btn_tsukamu.events().click([]{
         AddData(data_raw, TSUKAMU, shape);
         cout << data_raw.data.size() << " Grab" << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_tomaru{fm};
-    btn_tomaru.caption("とまる");
+    btn_tomaru.caption("8 とまる");
     btn_tomaru.events().click([]{
         AddData(data_raw, TOMARU, shape);
         cout << data_raw.data.size() << " Stop" << endl;
@@ -169,4 +169,5 @@ int main()
     {
         cout << e.what() << endl;
     }
+    t1.join();
 }
