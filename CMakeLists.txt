@@ -23,3 +23,9 @@ target_link_libraries(trainer dlib::dlib ${OpenCV_LIBS} Python3::NumPy Python3::
 target_include_directories(trainer PUBLIC 
     ${MATPLOTLIBCPP_INCLUDE_DIR}
     ${CEREAL_INCLUDE_DIR})
+
+add_executable(predictor predictor.cpp)
+target_link_libraries(predictor dlib::dlib ${OpenCV_LIBS} Python3::NumPy Python3::Python)
+target_include_directories(predictor PUBLIC 
+    ${MATPLOTLIBCPP_INCLUDE_DIR}
+    ${CEREAL_INCLUDE_DIR})
