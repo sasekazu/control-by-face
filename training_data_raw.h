@@ -16,14 +16,27 @@ struct TrainingDataRaw
     }
 };
 
-void AddData(TrainingDataRaw& data_raw, int label, const dlib::full_object_detection& shape){
+std::vector<int> PartToVector(const dlib::full_object_detection& shape){
     std::vector<int> parts;
-    data_raw.labels.push_back(label);
     for(unsigned int i=0; i<shape.num_parts(); ++i) {
         parts.push_back(shape.part(i).x());
         parts.push_back(shape.part(i).y());
     }
-    data_raw.data.push_back(parts);
+    return parts;
+}
+
+dlib::matrix<double,136,1> PartToMatrix(const dlib::full_object_detection& shape){
+    dlib::matrix<double,136,1> parts;
+    for(unsigned int i=0; i<shape.num_parts(); ++i) {
+        parts(i*2) = shape.part(i).x();
+        parts(i*2+1) = shape.part(i).y();
+    }
+    return parts;
+}
+
+void AddData(TrainingDataRaw& data_raw, int label, const dlib::full_object_detection& shape){
+    data_raw.labels.push_back(label);
+    data_raw.data.push_back(PartToVector(shape));
 }
 
 void PrintData(const TrainingDataRaw& data_raw){
