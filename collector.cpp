@@ -5,6 +5,9 @@
 #include <dlib/image_processing.h>
 #include <dlib/gui_widgets.h>
 #include <thread>
+#include <nana/gui.hpp>
+#include <nana/gui/widgets/label.hpp>
+#include <nana/gui/widgets/button.hpp>
 #include "training_data_raw.h"
 
 using namespace dlib;
@@ -13,35 +16,96 @@ full_object_detection shape;
 bool exit_flag = false;
 TrainingDataRaw data_raw;
 
+const int MIGI = 1;
+const int HIDARI = 2;
+const int MAE = 3;
+const int USHIRO = 4;
+const int UE = 5;
+const int SHITA = 6;
+const int TSUKAMU = 7;
+const int TOMARU = 8;
+
 void capture() {
-    while(!exit_flag){
-        char key;
-        std::cout << "Press label or ESC to exit: ";
-        std::cin >> key;
-        switch (key) {
-            case '1':
-                AddData(data_raw, 1, shape);
-                save("tmp.cereal", data_raw);
-                break;
-            case '2':
-                AddData(data_raw, 2, shape);
-                save("tmp.cereal", data_raw);
-                break;
-            case '3':
-                AddData(data_raw, 3, shape);
-                save("tmp.cereal", data_raw);
-                break;
-            case 'p':
-                PrintData(data_raw);
-                break;
-            case 's':
-                save("out.cereal", data_raw);
-                break;
-            case 27: // Escape
-                exit_flag = true;
-                break;
-        }
-    }
+
+    nana::form fm;
+    nana::button btn_migi{fm};
+    btn_migi.caption("migi");
+    btn_migi.events().click([]{
+        AddData(data_raw, MIGI, shape);
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_hidari{fm};
+    btn_hidari.caption("hidari");
+    btn_hidari.events().click([]{
+        AddData(data_raw, HIDARI, shape);
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_mae{fm};
+    btn_mae.caption("mae");
+    btn_mae.events().click([]{
+        AddData(data_raw, MAE, shape);
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_ushiro{fm};
+    btn_ushiro.caption("ushiro");
+    btn_ushiro.events().click([]{
+        AddData(data_raw, USHIRO, shape);
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_ue{fm};
+    btn_ue.caption("ue");
+    btn_ue.events().click([]{
+        AddData(data_raw, UE, shape);
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_shita{fm};
+    btn_shita.caption("shita");
+    btn_shita.events().click([]{
+        AddData(data_raw, SHITA, shape);
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_tsukamu{fm};
+    btn_tsukamu.caption("tsukamu");
+    btn_tsukamu.events().click([]{
+        AddData(data_raw, TSUKAMU, shape);
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_tomaru{fm};
+    btn_tomaru.caption("tomaru");
+    btn_tomaru.events().click([]{
+        AddData(data_raw, TOMARU, shape);
+        save("tmp.cereal", data_raw);
+    });
+    nana::button btn_print{fm};
+    btn_print.caption("print");
+    btn_print.events().click([]{
+        PrintData(data_raw);
+    });
+    nana::button btn_save{fm};
+    btn_save.caption("save");
+    btn_save.events().click([]{
+        save("out.cereal", data_raw);
+    });
+
+
+    nana::place layout(fm);
+    layout.div("vert<migi><hidari><mae><ushiro><ue><shita><tsukamu><tomaru><print><save>");
+
+    layout["migi"] << btn_migi;
+    layout["hidari"] << btn_hidari;
+    layout["mae"] << btn_mae;
+    layout["ushiro"] << btn_ushiro;
+    layout["ue"] << btn_ue;
+    layout["shita"] << btn_shita;
+    layout["tsukamu"] << btn_tsukamu;
+    layout["tomaru"] << btn_tomaru;
+    layout["print"] << btn_print;
+    layout["save"] << btn_save;
+    
+    layout.collocate();
+    fm.show();
+    nana::exec();
+    exit_flag = true;
 }
 
 
@@ -74,7 +138,7 @@ int main()
             win.clear_overlay();
             win.set_size(640, 480);
             win.set_background_color(0, 0, 0);
-            // win.set_image(cimg);
+            win.set_image(cimg);
             if(faces.size() > 0) {
                 shape = pose_model(cimg, faces[0]);
                 win.add_overlay(render_face_detections(shape));

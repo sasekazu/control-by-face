@@ -4,13 +4,14 @@ project(control-by-face CXX)
 
 find_package(dlib REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(unofficial-nana CONFIG REQUIRED)
 
 set(CEREAL_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/cereal/include")
 
 message(STATUS "CEREAL_INCLUDE_DIR: ${CEREAL_INCLUDE_DIR}")
 
 add_executable(collector collector.cpp)
-target_link_libraries(collector dlib::dlib ${OpenCV_LIBS})
+target_link_libraries(collector dlib::dlib ${OpenCV_LIBS}  unofficial::nana::nana)
 target_include_directories(collector PUBLIC 
     ${CEREAL_INCLUDE_DIR})
 
