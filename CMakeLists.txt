@@ -8,7 +8,6 @@ find_package(OpenCV REQUIRED)
 set(CEREAL_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/cereal/include")
 
 message(STATUS "CEREAL_INCLUDE_DIR: ${CEREAL_INCLUDE_DIR}")
-message(STATUS "MATPLOTLIBCPP_INCLUDE_DIR: ${MATPLOTLIBCPP_INCLUDE_DIR}")
 
 add_executable(collector collector.cpp)
 target_link_libraries(collector dlib::dlib ${OpenCV_LIBS})
@@ -21,7 +20,6 @@ target_include_directories(trainer PUBLIC
     ${CEREAL_INCLUDE_DIR})
 
 add_executable(predictor predictor.cpp)
-target_link_libraries(predictor dlib::dlib ${OpenCV_LIBS} Python3::NumPy Python3::Python)
+target_link_libraries(predictor dlib::dlib ${OpenCV_LIBS})
 target_include_directories(predictor PUBLIC 
-    ${MATPLOTLIBCPP_INCLUDE_DIR}
     ${CEREAL_INCLUDE_DIR})

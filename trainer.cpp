@@ -1,10 +1,8 @@
 #include "training_data_raw.h"
-#include "matplotlibcpp.h"
 #include <dlib/svm_threaded.h>
 
 using namespace std;
 using namespace dlib;
-namespace plt = matplotlibcpp;
 
 typedef matrix<double,136,1> sample_type;
 
