@@ -6,6 +6,27 @@
 #include <dlib/image_processing/render_face_detections.h>
 #include <dlib/matrix.h>
 
+
+const int TOMARU = 0;
+const int MIGI = 1;
+const int HIDARI = 2;
+const int MAE = 3;
+const int USHIRO = 4;
+const int UE = 5;
+const int SHITA = 6;
+const int TSUKAMU = 7;
+
+const char* const LABELS[] = {
+    "0 STOP",
+    "1 RIGHT",
+    "2 LEFT",
+    "3 FORWARD",
+    "4 BACKWARD",
+    "5 UP",
+    "6 DOWN",
+    "7 GRAB"
+};
+
 struct TrainingDataRaw
 {
     std::vector<int> labels;

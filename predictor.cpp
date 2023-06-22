@@ -49,7 +49,7 @@ int main() {
                 collected_data.top = faces[0].top();
                 collected_data.width = faces[0].width();
                 win.add_overlay(render_face_detections(collected_data.shape));
-                cout << "Result: " << df(PartToMatrix(collected_data)) << endl;
+                cout << "Result: " << LABELS[(int)df(PartToMatrix(collected_data))] << endl;
             }
         }
     }

@@ -15,74 +15,65 @@ bool exit_flag = false;
 CollectedData collected_data;
 TrainingDataRaw data_raw;
 
-const int MIGI = 1;
-const int HIDARI = 2;
-const int MAE = 3;
-const int USHIRO = 4;
-const int UE = 5;
-const int SHITA = 6;
-const int TSUKAMU = 7;
-const int TOMARU = 8;
-
 void capture() {
 
     std::locale::global(std::locale(""));
 
     nana::form fm;
+    nana::button btn_tomaru{fm};
+    btn_tomaru.caption("0 とまる");
+    btn_tomaru.events().click([]{
+        AddData(data_raw, TOMARU, collected_data);
+        cout << data_raw.data.size() << " " << LABELS[TOMARU] << endl;
+        save("tmp.cereal", data_raw);
+    });
     nana::button btn_migi{fm};
     btn_migi.caption("1 みぎ");
     btn_migi.events().click([]{
         AddData(data_raw, MIGI, collected_data);
-        cout << data_raw.data.size() << " Right" << endl;
+        cout << data_raw.data.size() << " " << LABELS[MIGI] << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_hidari{fm};
     btn_hidari.caption("2 ひだり");
     btn_hidari.events().click([]{
         AddData(data_raw, HIDARI, collected_data);
-        cout << data_raw.data.size() << " Left" << endl;
+        cout << data_raw.data.size() << " " << LABELS[HIDARI] << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_mae{fm};
     btn_mae.caption("3 まえ");
     btn_mae.events().click([]{
         AddData(data_raw, MAE, collected_data);
-        cout << data_raw.data.size() << " Forward" << endl;
+        cout << data_raw.data.size() << " " << LABELS[MAE] << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_ushiro{fm};
     btn_ushiro.caption("4 うしろ");
     btn_ushiro.events().click([]{
         AddData(data_raw, USHIRO, collected_data);
-        cout << data_raw.data.size() << " Backward" << endl;
+        cout << data_raw.data.size() << " " << LABELS[USHIRO] << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_ue{fm};
     btn_ue.caption("5 うえ");
     btn_ue.events().click([]{
         AddData(data_raw, UE, collected_data);
-        cout << data_raw.data.size() << " Up" << endl;
+        cout << data_raw.data.size() << " " << LABELS[UE] << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_shita{fm};
     btn_shita.caption("6 した");
     btn_shita.events().click([]{
         AddData(data_raw, SHITA, collected_data);
-        cout << data_raw.data.size() << " Down" << endl;
+        cout << data_raw.data.size() << " " << LABELS[SHITA] << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_tsukamu{fm};
     btn_tsukamu.caption("7 つかむ");
     btn_tsukamu.events().click([]{
         AddData(data_raw, TSUKAMU, collected_data);
-        cout << data_raw.data.size() << " Grab" << endl;
-        save("tmp.cereal", data_raw);
-    });
-    nana::button btn_tomaru{fm};
-    btn_tomaru.caption("8 とまる");
-    btn_tomaru.events().click([]{
-        AddData(data_raw, TOMARU, collected_data);
-        cout << data_raw.data.size() << " Stop" << endl;
+        cout << data_raw.data.size() << " " << LABELS[TSUKAMU] << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_print{fm};
@@ -100,8 +91,9 @@ void capture() {
     });
 
     nana::place layout(fm);
-    layout.div("vert<migi><hidari><mae><ushiro><ue><shita><tsukamu><tomaru><<print><save>>");
+    layout.div("vert<tomaru><migi><hidari><mae><ushiro><ue><shita><tsukamu><<print><save>>");
 
+    layout["tomaru"] << btn_tomaru;
     layout["migi"] << btn_migi;
     layout["hidari"] << btn_hidari;
     layout["mae"] << btn_mae;
@@ -109,7 +101,6 @@ void capture() {
     layout["ue"] << btn_ue;
     layout["shita"] << btn_shita;
     layout["tsukamu"] << btn_tsukamu;
-    layout["tomaru"] << btn_tomaru;
     layout["print"] << btn_print;
     layout["save"] << btn_save;
     
