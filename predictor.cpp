@@ -36,6 +36,7 @@ int main() {
             if (!cap.read(temp)) {
                 break;
             }
+            cv::flip(temp, temp, 1);
             cv_image<bgr_pixel> cimg(temp);
             std::vector<rectangle> faces = detector(cimg);
             win.clear_overlay();
