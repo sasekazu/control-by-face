@@ -3,12 +3,13 @@
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/vector.hpp>
 #include <dlib/image_processing/frontal_face_detector.h>
+#include <dlib/image_processing/render_face_detections.h>
 #include <dlib/matrix.h>
 
 struct TrainingDataRaw
 {
     std::vector<int> labels;
-    std::vector<std::vector<int>> data;
+    std::vector<std::vector<double>> data;
 
     template <class Archive>
     void serialize(Archive &archive) {
@@ -16,27 +17,35 @@ struct TrainingDataRaw
     }
 };
 
-std::vector<int> PartToVector(const dlib::full_object_detection& shape){
-    std::vector<int> parts;
-    for(unsigned int i=0; i<shape.num_parts(); ++i) {
-        parts.push_back(shape.part(i).x());
-        parts.push_back(shape.part(i).y());
+
+struct CollectedData {
+    dlib::full_object_detection shape;
+    double top;
+    double left;
+    double width;
+};
+
+std::vector<double> PartToVector(const CollectedData& d){
+    std::vector<double> parts;
+    for(unsigned int i=0; i<d.shape.num_parts(); ++i) {
+        parts.push_back((d.shape.part(i).x() - d.left)/d.width);
+        parts.push_back((d.shape.part(i).y() - d.top)/d.width);
     }
     return parts;
 }
 
-dlib::matrix<double,136,1> PartToMatrix(const dlib::full_object_detection& shape){
+dlib::matrix<double,136,1> PartToMatrix(const CollectedData& d){
     dlib::matrix<double,136,1> parts;
-    for(unsigned int i=0; i<shape.num_parts(); ++i) {
-        parts(i*2) = shape.part(i).x();
-        parts(i*2+1) = shape.part(i).y();
+    for(unsigned int i=0; i<d.shape.num_parts(); ++i) {
+        parts(i*2) = (d.shape.part(i).x() - d.left)/d.width;
+        parts(i*2+1) = (d.shape.part(i).y() - d.top)/d.width;
     }
     return parts;
 }
 
-void AddData(TrainingDataRaw& data_raw, int label, const dlib::full_object_detection& shape){
+void AddData(TrainingDataRaw& data_raw, int label, const CollectedData& d){
     data_raw.labels.push_back(label);
-    data_raw.data.push_back(PartToVector(shape));
+    data_raw.data.push_back(PartToVector(d));
 }
 
 void PrintData(const TrainingDataRaw& data_raw){

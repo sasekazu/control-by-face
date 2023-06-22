@@ -9,7 +9,7 @@
 
 using namespace std;
 using namespace dlib;
-full_object_detection shape;
+CollectedData collected_data;
 
 typedef matrix<double,136,1> sample_type;
 
@@ -43,9 +43,12 @@ int main() {
             win.set_background_color(0, 0, 0);
             win.set_image(cimg);
             if(faces.size() > 0) {
-                shape = pose_model(cimg, faces[0]);
-                win.add_overlay(render_face_detections(shape));
-                cout << "Result: " << df(PartToMatrix(shape)) << endl;
+                collected_data.shape = pose_model(cimg, faces[0]);
+                collected_data.left = faces[0].left();
+                collected_data.top = faces[0].top();
+                collected_data.width = faces[0].width();
+                win.add_overlay(render_face_detections(collected_data.shape));
+                cout << "Result: " << df(PartToMatrix(collected_data)) << endl;
             }
         }
     }
