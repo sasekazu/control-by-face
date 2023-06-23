@@ -25,7 +25,7 @@ This reads `out.cereal` and exports a trained model in `decision_function.dat`.
 
 ## Predictor
 Predict control signals from face images.
-This reads `decision_function.dat`.
+This reads `decision_function.dat` and `shape_predictor_68_face_landmarks.dat`.
 You can check the predicted control signals on a console.
 
 ## Simulator
@@ -34,8 +34,10 @@ A robot end-effector is modeled as a sphere.
 This requires openFrameworks.
 Include `training_data_raw.h` in a openFrameworks project.
 Replace `ofApp.h` and `ofApp.cpp` with these of this repository.
+This reads `decision_function.dat` and `shape_predictor_68_face_landmarks.dat`.
 
 ## Controller
 Control a robot (Ufactory Lite6) with the predicted control signals.
 This requires [xArm-CPLUS-SDK](https://github.com/xArm-Developer/xArm-CPLUS-SDK).
 In an example lf xArm-CPLUS-SDK, such as `1009-cartesian_velocity_control.cc`, add an include path to `traning_data_raw.h` and replace a source file with `controller.cpp` of this repository.
+This reads `decision_function.dat` and `shape_predictor_68_face_landmarks.dat`.
