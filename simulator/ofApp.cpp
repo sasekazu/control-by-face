@@ -56,11 +56,11 @@ void faceui() {
         image_window win;
         frontal_face_detector detector = get_frontal_face_detector();
         shape_predictor pose_model;
-        deserialize("data/shape_predictor_68_face_landmarks.dat") >> pose_model;
+        deserialize("shape_predictor_68_face_landmarks.dat") >> pose_model;
 
         typedef linear_kernel<sample_type> lin_kernel;
         multiclass_linear_decision_function<lin_kernel, double> df;
-        deserialize("data/decision_function.dat") >> df;
+        deserialize("decision_function.dat") >> df;
 
         while (!win.is_closed())
         {
@@ -82,7 +82,7 @@ void faceui() {
                 collected_data.width = faces[0].width();
                 win.add_overlay(render_face_detections(collected_data.shape));
                 double result = df(PartToMatrix(collected_data));
-                cout << "Result: " << result << endl;
+                cout << "Result: " << LABELS[(int)result] << endl;
                 cmd[(int)result].Apply(velocity, grab);
             }
         }
