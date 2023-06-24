@@ -13,6 +13,13 @@ git clone https://github.com/sasekazu/control-by-face.git --recursive
 - openFrameworks (for simulator)
 - xArm-CPLUS-SDK (for controller)
 
+To install the dependencies using vcpkg, run this command.
+```bash
+vcpkg install dlib cereal opencv nana
+```
+
+Download `shape_predictor_68_face_landmarks.dat` from http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2 .
+
 # Apps
 ## Collector
 Collect face images from a webcam with labels.
