@@ -34,32 +34,22 @@ typedef std::array<fp32, 6> vec6;
 
 float v = 10.0f;
 
-class Command {
-public:
-    Command() {};
-    void Set(const vec6& v, bool g) {
-        v_ = v;
-        g_ = g;
-    }
-    vec6 v_{ 0, 0, 0, 0, 0, 0 };
-    bool g_ = false;
-};
-Command cmd[8];
-Command send_cmd;
+vec6 cmd_vel[7];
+vec6 send_vel;
 int debug_cmd_id = 0;
 bool start_flag = false;
 bool exit_flag = false;
+bool grab_flag = false;
 
 
 void UpdateCommands() {
-    cmd[TOMARU].Set({ 0, 0, 0, 0, 0, 0 }, false);
-    cmd[MIGI].Set({ 0, v, 0, 0, 0, 0 }, false);
-    cmd[HIDARI].Set({ 0, -v, 0, 0, 0, 0 }, false);
-    cmd[MAE].Set({ -v, 0, 0, 0, 0, 0 }, false);
-    cmd[USHIRO].Set({ v, 0, 0, 0, 0, 0 }, false);
-    cmd[UE].Set({ 0, 0, v, 0, 0, 0 }, false);
-    cmd[SHITA].Set({ 0, 0, -v, 0, 0, 0 }, false);
-    cmd[TSUKAMU].Set({ 0, 0, 0, 0, 0, 0 }, true);
+    cmd_vel[TOMARU] = vec6({ 0, 0, 0, 0, 0, 0 });
+    cmd_vel[MIGI] = vec6({ 0, v, 0, 0, 0, 0 });
+    cmd_vel[HIDARI] = vec6({ 0, -v, 0, 0, 0, 0 });
+    cmd_vel[TEMAE] = vec6({ v, 0, 0, 0, 0, 0 });
+    cmd_vel[OKU] = vec6({ -v, 0, 0, 0, 0, 0 });
+    cmd_vel[UE] = vec6({ 0, 0, v, 0, 0, 0 });
+    cmd_vel[SHITA] = vec6({ 0, 0, -v, 0, 0, 0 });
 }
 
 void GUI() {
@@ -100,10 +90,18 @@ void GUI() {
     btn_debug.caption(u8"デバッグ 顔を隠して押すとコマンド送り");
     btn_debug.events().click([] {
         ++debug_cmd_id;
-        if (debug_cmd_id == 8) {
+        if (debug_cmd_id == 9) {
             debug_cmd_id = 0;
         }
-        send_cmd = cmd[debug_cmd_id];
+        else if (debug_cmd_id == (int) TSUKAMU) {
+            grab_flag = true;
+        }
+        else if (debug_cmd_id == (int) HANASU) {
+            grab_flag = false;
+        }
+        else {
+            send_vel = cmd_vel[debug_cmd_id];
+        }
         cout << "DEBUG: " << LABELS[debug_cmd_id] << endl;
         });
     nana::place layout(fm);
@@ -166,7 +164,15 @@ void faceDetection() {
                     cout << "COMMAND: " << LABELS[(int)result_new] << " ";
                     cout << (start_flag ? "" : "STOPPED") << endl;
                 }
-                send_cmd = cmd[(int)result_new];
+                if (result_new == TSUKAMU) {
+                    grab_flag = true;
+                }
+                else if (result_new == HANASU) {
+                    grab_flag = false;
+                }
+                else {
+                    send_vel = cmd_vel[(int)result_new];
+                }
                 result_old = result_new;
             }
         }
@@ -210,14 +216,18 @@ int main(int argc, char **argv) {
     arm->set_state(0);
     sleep_milliseconds(1000);
 
+    vec6 vel0 = { 20, 0, 0, 0, 0, 0 };
+    ret = arm->vc_set_cartesian_velocity(.data()); // mm/s?
+    sleep_milliseconds(2500);   // 50 mm
+
     while (!exit_flag) {
         if (start_flag) {
-            ret = arm->vc_set_cartesian_velocity(send_cmd.v_.data()); // mm/s?
-            ret = arm->set_vacuum_gripper(send_cmd.g_);
+            ret = arm->vc_set_cartesian_velocity(send_vel.data()); // mm/s?
+            ret = arm->set_vacuum_gripper(grab_flag);
         }
         else {
-            ret = arm->vc_set_cartesian_velocity(cmd[TOMARU].v_.data());
-            ret = arm->set_vacuum_gripper(cmd[TOMARU].g_);
+            ret = arm->vc_set_cartesian_velocity(cmd_vel[TOMARU].data());
+            ret = arm->set_vacuum_gripper(grab_flag);
         }
         sleep_milliseconds(500);
     }

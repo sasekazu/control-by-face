@@ -17,34 +17,16 @@ ofVec3f velocity;
 float v = 3.0f;
 bool grab = false;
 
-
-class Command {
-public:
-    Command(const ofVec3f& v = ofVec3f(0,0,0), bool g = false) 
-        : v_(v), g_(g) {}
-    void Set(const ofVec3f& v, bool g) { 
-        v_ = v;
-        g_ = g; 
-    }
-    void Apply(ofVec3f& v, bool& g) {
-        v = v_;
-        g = g_;
-    }
-private:
-    ofVec3f v_;
-    bool g_;
-};
-Command cmd[8];
+ofVec3f[7] cmd_vel;
 
 void faceui() {
-    cmd[TOMARU] .Set(ofVec3f( 0, 0, 0), false);
-    cmd[MIGI]   .Set(ofVec3f( v, 0, 0), false);
-    cmd[HIDARI] .Set(ofVec3f(-v, 0, 0), false);
-    cmd[MAE]    .Set(ofVec3f( 0, 0, v), false);
-    cmd[USHIRO] .Set(ofVec3f( 0, 0,-v), false);
-    cmd[UE]     .Set(ofVec3f( 0, v, 0), false);
-    cmd[SHITA]  .Set(ofVec3f( 0,-v, 0), false);
-    cmd[TSUKAMU].Set(ofVec3f( 0, 0, 0), true );
+    cmd_vel[TOMARU] = ofVec3f(0, 0, 0);
+    cmd_vel[MIGI] = ofVec3f(v, 0, 0);
+    cmd_vel[HIDARI] = ofVec3f(-v, 0, 0);
+    cmd_vel[TEMAE] = ofVec3f(0, 0, v);
+    cmd_vel[OKU] = ofVec3f(0, 0, -v);
+    cmd_vel[UE] = ofVec3f(0, v, 0);
+    cmd_vel[SHITA] = ofVec3f(0, -v, 0);
 
     try {
         cv::VideoCapture cap(0);
@@ -83,7 +65,13 @@ void faceui() {
                 win.add_overlay(render_face_detections(collected_data.shape));
                 double result = df(PartToMatrix(collected_data));
                 cout << "Result: " << LABELS[(int)result] << endl;
-                cmd[(int)result].Apply(velocity, grab);
+                if((int)result < 7){
+                    velocity = cmd_vel[(int)result];
+                } else if (result == TSUKAMU) {
+                    grab = true;
+                } else if (result == HANASU) {
+                    grab = false;
+                }
             }
         }
     }

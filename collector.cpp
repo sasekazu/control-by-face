@@ -42,17 +42,17 @@ void capture() {
         save("tmp.cereal", data_raw);
     });
     nana::button btn_mae{fm};
-    btn_mae.caption("3 まえ");
+    btn_mae.caption("3 てまえ");
     btn_mae.events().click([]{
-        AddData(data_raw, MAE, collected_data);
-        cout << data_raw.data.size() << " " << LABELS[MAE] << endl;
+        AddData(data_raw, TEMAE, collected_data);
+        cout << data_raw.data.size() << " " << LABELS[TEMAE] << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_ushiro{fm};
-    btn_ushiro.caption("4 うしろ");
+    btn_ushiro.caption("4 おく");
     btn_ushiro.events().click([]{
-        AddData(data_raw, USHIRO, collected_data);
-        cout << data_raw.data.size() << " " << LABELS[USHIRO] << endl;
+        AddData(data_raw, OKU, collected_data);
+        cout << data_raw.data.size() << " " << LABELS[OKU] << endl;
         save("tmp.cereal", data_raw);
     });
     nana::button btn_ue{fm};
@@ -76,6 +76,13 @@ void capture() {
         cout << data_raw.data.size() << " " << LABELS[TSUKAMU] << endl;
         save("tmp.cereal", data_raw);
     });
+    nana::button btn_hanasu{fm};
+    btn_hanasu.caption("8 はなす");
+    btn_hanasu.events().click([]{
+        AddData(data_raw, HANASU, collected_data);
+        cout << data_raw.data.size() << " " << LABELS[HANASU] << endl;
+        save("tmp.cereal", data_raw);
+    });
     nana::button btn_print{fm};
     btn_print.caption("ひょうじ");
     btn_print.events().click([]{
@@ -91,7 +98,7 @@ void capture() {
     });
 
     nana::place layout(fm);
-    layout.div("vert<tomaru><migi><hidari><mae><ushiro><ue><shita><tsukamu><<print><save>>");
+    layout.div("vert<tomaru><migi><hidari><mae><ushiro><ue><shita><tsukamu><hanasu><<print><save>>");
 
     layout["tomaru"] << btn_tomaru;
     layout["migi"] << btn_migi;
@@ -101,6 +108,7 @@ void capture() {
     layout["ue"] << btn_ue;
     layout["shita"] << btn_shita;
     layout["tsukamu"] << btn_tsukamu;
+    layout["hanasu"] << btn_hanasu;
     layout["print"] << btn_print;
     layout["save"] << btn_save;
     

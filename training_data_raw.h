@@ -10,21 +10,23 @@
 const int TOMARU = 0;
 const int MIGI = 1;
 const int HIDARI = 2;
-const int MAE = 3;
-const int USHIRO = 4;
+const int TEMAE = 3;
+const int OKU = 4;
 const int UE = 5;
 const int SHITA = 6;
 const int TSUKAMU = 7;
+const int HANASU = 8;
 
 const char* const LABELS[] = {
     "0 STOP",
     "1 RIGHT",
     "2 LEFT",
-    "3 FORWARD",
-    "4 BACKWARD",
+    "3 FORWARD (TEMAE)",
+    "4 BACKWARD (OKU)",
     "5 UP",
     "6 DOWN",
-    "7 GRAB"
+    "7 GRAB ON",
+    "8 GRAB OFF"
 };
 
 struct TrainingDataRaw
