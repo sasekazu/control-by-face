@@ -29,6 +29,8 @@ const char* const LABELS[] = {
     "8 GRAB OFF"
 };
 
+const std::vector<int> focus_parts = {3, 9, 15, 20, 25, 34, 39, 41, 44, 48, 49, 55, 63, 67};
+
 struct TrainingDataRaw
 {
     std::vector<int> labels;
@@ -51,8 +53,14 @@ struct CollectedData {
 std::vector<double> PartToVector(const CollectedData& d){
     std::vector<double> parts;
     for(unsigned int i=0; i<d.shape.num_parts(); ++i) {
-        parts.push_back((d.shape.part(i).x() - d.left)/d.width);
-        parts.push_back((d.shape.part(i).y() - d.top)/d.width);
+        auto it = std::find(focus_parts.begin(), focus_parts.end(), i);
+        if(it == focus_parts.end()) {
+            parts.push_back(0);
+            parts.push_back(0);
+        } else {
+            parts.push_back((d.shape.part(i).x() - d.left)/d.width);
+            parts.push_back((d.shape.part(i).y() - d.top)/d.width);
+        }
     }
     return parts;
 }
@@ -100,16 +108,16 @@ void load(const char* filename, TrainingDataRaw& data_raw){
     }
 }
 
-std::vector<dlib::point> GetParts(const TrainingDataRaw& data_raw, unsigned int index){
-    std::vector<dlib::point> parts;
-    for(unsigned int i=0; i<data_raw.data[index].size(); i+=2) {
-        dlib::point part;
-        part(0) = data_raw.data[index][i];
-        part(1) = data_raw.data[index][i+1];
-        parts.push_back(part);
-    }
-    return parts;
-}
+// std::vector<dlib::point> GetParts(const TrainingDataRaw& data_raw, unsigned int index){
+//     std::vector<dlib::point> parts;
+//     for(unsigned int i=0; i<data_raw.data[index].size(); i+=2) {
+//         dlib::point part;
+//         part(0) = data_raw.data[index][i];
+//         part(1) = data_raw.data[index][i+1];
+//         parts.push_back(part);
+//     }
+//     return parts;
+// }
 
 std::vector<int> GetX(const TrainingDataRaw& data_raw, unsigned int index){
     std::vector<int> x;
