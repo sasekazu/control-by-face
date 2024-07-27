@@ -41,6 +41,7 @@ bool start_flag = false;
 bool clicked_flag = false;
 bool exit_flag = false;
 bool grab_flag = false;
+bool grab_signaling = false;
 
 
 void UpdateCommands() {
@@ -163,17 +164,20 @@ void faceDetection() {
                 static double result_old;
                 double result_new = df(PartToMatrix(collected_data));
                 if (result_new != result_old) {
-                    cout << "COMMAND: " << LABELS[(int)result_new] << " ";
-                    cout << (start_flag ? "" : "STOPPED") << endl;
+                    std::cout << "COMMAND: " << LABELS[(int)result_new] << " ";
+                    std::cout << (start_flag ? "" : "STOPPED") << endl;
                 }
                 if (result_new == TSUKAMU) {
                     grab_flag = false;
+                    grab_signaling = true;
                 }
                 else if (result_new == HANASU) {
                     grab_flag = true;
+                    grab_signaling = true;
                 }
                 else {
                     send_vel = cmd_vel[(int)result_new];
+                    grab_signaling = false;
                 }
                 result_old = result_new;
             }
@@ -224,17 +228,22 @@ int main(int argc, char** argv) {
             clicked_flag = false;
         }
         if (start_flag) {
-            ret = arm->vc_set_cartesian_velocity(send_vel.data()); // mm/s
-            ret = arm->set_vacuum_gripper(grab_flag);
+            if (grab_signaling) {
+                ret = arm->vc_set_cartesian_velocity(cmd_vel[TOMARU].data());
+                ret = arm->set_vacuum_gripper(grab_flag);
+            }
+            else {
+                ret = arm->vc_set_cartesian_velocity(send_vel.data()); // mm/s
+            }
         }
         else {
             ret = arm->vc_set_cartesian_velocity(cmd_vel[TOMARU].data());
-            ret = arm->set_vacuum_gripper(grab_flag);
+            ret = arm->set_vacuum_gripper(true);
         }
         sleep_milliseconds(500);
     }
 
-    cout << "Control thread ended" << endl;
+    std::cout << "Control thread ended" << endl;
 
     t1.join();
     t2.join();
