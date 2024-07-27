@@ -1,10 +1,10 @@
 /**
  * Software License Agreement (MIT License)
- * 
+ *
  * Copyright (c) 2022, UFACTORY, Inc.
- * 
+ *
  * All rights reserved.
- * 
+ *
  * @author Vinman <vinman.wen@ufactory.cc> <vinman.cub@gmail.com>
  */
 
@@ -60,12 +60,12 @@ void GUI() {
     btn_start.caption(u8"スタート");
     btn_start.events().click([] {
         start_flag = true;
-    });
+        });
     nana::button btn_stop{ fm };
     btn_stop.caption(u8"ストップ");
     btn_stop.events().click([] {
         start_flag = false;
-    });
+        });
     nana::button btn_faster{ fm };
     btn_faster.caption(u8"はやく");
     btn_faster.events().click([] {
@@ -93,10 +93,10 @@ void GUI() {
         if (debug_cmd_id == 9) {
             debug_cmd_id = 0;
         }
-        else if (debug_cmd_id == (int) TSUKAMU) {
+        else if (debug_cmd_id == (int)TSUKAMU) {
             grab_flag = true;
         }
-        else if (debug_cmd_id == (int) HANASU) {
+        else if (debug_cmd_id == (int)HANASU) {
             grab_flag = false;
         }
         else {
@@ -116,7 +116,7 @@ void GUI() {
     fm.show();
     nana::exec();
     exit_flag = true;
-    
+
 }
 
 void faceDetection() {
@@ -183,17 +183,17 @@ void faceDetection() {
     }
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
     std::thread t1(GUI);
     std::thread t2(faceDetection);
 
     std::string port;
     if (argc < 2) {
-      printf("Please enter IP address\n");
-      printf("Here, the IP adress 192.168.1.152 is used\n");
-      port = std::string("192.168.1.152");
-    } 
+        printf("Please enter IP address\n");
+        printf("Here, the IP adress 192.168.1.152 is used\n");
+        port = std::string("192.168.1.152");
+    }
     else {
         port = std::string(argv[1]);
     }
@@ -217,7 +217,7 @@ int main(int argc, char **argv) {
     sleep_milliseconds(1000);
 
     vec6 vel0 = { 20, 0, 0, 0, 0, 0 };
-    ret = arm->vc_set_cartesian_velocity(.data()); // mm/s?
+    ret = arm->vc_set_cartesian_velocity(vel0.data()); // mm/s?
     sleep_milliseconds(2500);   // 50 mm
 
     while (!exit_flag) {
