@@ -15,17 +15,17 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
 endif()
 
-add_executable(collector collector.cpp)
-target_link_libraries(collector dlib::dlib ${OpenCV_LIBS}  unofficial::nana::nana)
-target_include_directories(collector PUBLIC 
+add_executable(01collector 01collector.cpp)
+target_link_libraries(01collector dlib::dlib ${OpenCV_LIBS}  unofficial::nana::nana)
+target_include_directories(01collector PUBLIC 
     ${CEREAL_INCLUDE_DIR})
 
-add_executable(trainer trainer.cpp)
-target_link_libraries(trainer dlib::dlib ${OpenCV_LIBS})
-target_include_directories(trainer PUBLIC 
+add_executable(02trainer 02trainer.cpp)
+target_link_libraries(02trainer dlib::dlib ${OpenCV_LIBS})
+target_include_directories(02trainer PUBLIC 
     ${CEREAL_INCLUDE_DIR})
 
-add_executable(predictor predictor.cpp)
-target_link_libraries(predictor dlib::dlib ${OpenCV_LIBS})
-target_include_directories(predictor PUBLIC 
+add_executable(03predictor 03predictor.cpp)
+target_link_libraries(03predictor dlib::dlib ${OpenCV_LIBS})
+target_include_directories(03predictor PUBLIC 
     ${CEREAL_INCLUDE_DIR})
