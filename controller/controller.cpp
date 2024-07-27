@@ -1,10 +1,10 @@
 /**
  * Software License Agreement (MIT License)
- * 
+ *
  * Copyright (c) 2022, UFACTORY, Inc.
- * 
+ *
  * All rights reserved.
- * 
+ *
  * @author Vinman <vinman.wen@ufactory.cc> <vinman.cub@gmail.com>
  */
 
@@ -38,6 +38,7 @@ vec6 cmd_vel[7];
 vec6 send_vel;
 int debug_cmd_id = 0;
 bool start_flag = false;
+bool clicked_flag = false;
 bool exit_flag = false;
 bool grab_flag = false;
 
@@ -60,12 +61,13 @@ void GUI() {
     btn_start.caption(u8"スタート");
     btn_start.events().click([] {
         start_flag = true;
-    });
+        clicked_flag = true;
+        });
     nana::button btn_stop{ fm };
     btn_stop.caption(u8"ストップ");
     btn_stop.events().click([] {
         start_flag = false;
-    });
+        });
     nana::button btn_faster{ fm };
     btn_faster.caption(u8"はやく");
     btn_faster.events().click([] {
@@ -93,10 +95,10 @@ void GUI() {
         if (debug_cmd_id == 9) {
             debug_cmd_id = 0;
         }
-        else if (debug_cmd_id == (int) TSUKAMU) {
+        else if (debug_cmd_id == (int)TSUKAMU) {
             grab_flag = true;
         }
-        else if (debug_cmd_id == (int) HANASU) {
+        else if (debug_cmd_id == (int)HANASU) {
             grab_flag = false;
         }
         else {
@@ -116,7 +118,7 @@ void GUI() {
     fm.show();
     nana::exec();
     exit_flag = true;
-    
+
 }
 
 void faceDetection() {
@@ -165,10 +167,10 @@ void faceDetection() {
                     cout << (start_flag ? "" : "STOPPED") << endl;
                 }
                 if (result_new == TSUKAMU) {
-                    grab_flag = true;
+                    grab_flag = false;
                 }
                 else if (result_new == HANASU) {
-                    grab_flag = false;
+                    grab_flag = true;
                 }
                 else {
                     send_vel = cmd_vel[(int)result_new];
@@ -183,17 +185,17 @@ void faceDetection() {
     }
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
     std::thread t1(GUI);
     std::thread t2(faceDetection);
 
     std::string port;
     if (argc < 2) {
-      printf("Please enter IP address\n");
-      printf("Here, the IP adress 192.168.1.152 is used\n");
-      port = std::string("192.168.1.152");
-    } 
+        printf("Please enter IP address\n");
+        printf("Here, the IP adress 192.168.1.152 is used\n");
+        port = std::string("192.168.1.152");
+    }
     else {
         port = std::string(argv[1]);
     }
@@ -208,21 +210,21 @@ int main(int argc, char **argv) {
     sleep_milliseconds(500);
 
     int ret;
-    arm->reset(true);
-    //fp32 init_pos[6]{ 200, 0, 200, 180, 0, 0 };
-    //arm->set_position(init_pos); // これをやると、この後の速度制御が動かなくなる
+    //arm->reset(true);
+    fp32 init_pos[6]{ 400, 0, 200, 180, 0, 0 };
+    arm->set_position(init_pos);
+    sleep_milliseconds(2000);
 
-    arm->set_mode(5);   // velocity control mode
-    arm->set_state(0);
-    sleep_milliseconds(1000);
-
-    vec6 vel0 = { 20, 0, 0, 0, 0, 0 };
-    ret = arm->vc_set_cartesian_velocity(.data()); // mm/s?
-    sleep_milliseconds(2500);   // 50 mm
 
     while (!exit_flag) {
+        if (clicked_flag) {
+            arm->set_mode(5);   // velocity control mode
+            arm->set_state(0);
+            sleep_milliseconds(1000);
+            clicked_flag = false;
+        }
         if (start_flag) {
-            ret = arm->vc_set_cartesian_velocity(send_vel.data()); // mm/s?
+            ret = arm->vc_set_cartesian_velocity(send_vel.data()); // mm/s
             ret = arm->set_vacuum_gripper(grab_flag);
         }
         else {
