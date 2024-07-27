@@ -6,7 +6,14 @@ using namespace dlib;
 
 typedef matrix<double,136,1> sample_type;
 
-int main() {
+int main(int argc, char** argv) {
+    // Usage, defalut c_value = 1
+    cout << "Usage: " << argv[0] << " [c_value]" << endl;
+    cout << "c_value: hyper parameter for SVM (0~100)" << endl;
+    int c_value = 1;
+    if (argc > 1) {
+        c_value = atoi(argv[1]);
+    }
     try{
         TrainingDataRaw data_raw;
         load("out.cereal", data_raw);
@@ -20,8 +27,8 @@ int main() {
         multiclass_linear_decision_function<lin_kernel,double> df = trainer.train(samples,labels);
 
         randomize_samples(samples, labels);
-        trainer.set_c(1); // hyper parameter 
-        cout << "cross validation: " << trainer.get_c() << "\n" <<
+        trainer.set_c(c_value); // hyper parameter 
+        cout << "cross validation: (c_value = " << trainer.get_c() << " )\n" <<
         cross_validate_multiclass_trainer(trainer, samples, labels, 5) << endl;
 
         serialize("decision_function.dat") << df;
